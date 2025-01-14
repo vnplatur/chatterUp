@@ -61,27 +61,30 @@ document
 
       if (response.ok) {
         const result = await response.json();
-        if(result.message=="exist"){
+        if (result.message == "exist") {
           alert(`user with name: ${username} already exist, Please try again.`);
-          document.getElementById("entry-form").scrollIntoView({ behavior: "smooth" });
-          return
-        } 
-
-        if(result.message=="noUser"){
-          alert(`user with name: ${username} do not exist, Please try again.`);
-          document.getElementById("entry-form").scrollIntoView({ behavior: "smooth" });
-          return
+          document
+            .getElementById("entry-form")
+            .scrollIntoView({ behavior: "smooth" });
+          return;
         }
-          
-        
+
+        if (result.message == "noUser") {
+          alert(`user with name: ${username} do not exist, Please try again.`);
+          document
+            .getElementById("entry-form")
+            .scrollIntoView({ behavior: "smooth" });
+          return;
+        }
+
         console.log("User saved:", result.user);
 
         // Redirect to chat page
         localStorage.setItem("username", username);
         localStorage.setItem("room", room);
-        localStorage.setItem("imageUrl",result.user.imageUrl) 
-       
-        window.location.href = "index.html";
+        localStorage.setItem("imageUrl", result.user.imageUrl);
+
+        window.location.href = "chatApp.html";
       } else {
         const errorData = await response.json();
         console.error("Error saving user:", errorData);

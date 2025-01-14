@@ -1,194 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chat Interface</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="chat-container">
-      <div class="chat-box">
-        <div class="header"></div>
-        <div class="messages">
-          <!-- <div class="message">
-            <div class="avatar coding-ninjas"></div>
-            <div class="text">
-              <strong>coding ninjas</strong>
-              <p>
-                Hello, learner! Let's get to know each other by sharing your
-                name, city, and dream.
-              </p>
-              <span class="time">02:01</span>
-            </div>
-          </div>
-          <div class="message">
-            <div class="avatar vivek"></div>
-            <div class="text">
-              <strong>vivek</strong>
-              <p>
-                I am Vivek from Uttar Pradesh, and I aspire to become a software
-                engineer.
-              </p>
-              <span class="time">02:04</span>
-            </div>
-          </div>
-          <div class="message self">
-            <div class="avatar arnav"></div>
-            <div class="text">
-              <strong>arnav</strong>
-              <p>
-                I am Arnav from Gurgaon, and I also aspire to become a software
-                engineer.
-              </p>
-              <span class="time">02:10</span>
-            </div>
-          </div> -->
-        </div>
-        <div class="input-container">
-          <input type="text" placeholder="Enter your message..." />
-          <button>Send</button>
-        </div>
-      </div>
-      <div class="user-list">
-        <h3 id="usercount"></h3>
-        <ul id="newuser">
-          <!-- <li class="online">
-            <span class="user-status"></span> coding ninjas
-          </li>
-          <li class="online"><span class="user-status"></span> arnav</li>
-          <li class="online"><span class="user-status"></span> ankur</li> -->
-        </ul>
-      </div>
-    </div>
-
-    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script>
-      const socket = io("http://localhost:3000");
-
-      document.addEventListener("DOMContentLoaded", () => {
-        const input = document.querySelector(".input-container input");
-        const button = document.querySelector(".input-container button");
-        const messages = document.querySelector(".messages");
-        const header = document.querySelector(".header");
-        const userList = document.getElementById("newuser");
-        const usercount = document.getElementById("usercount");
-        const username = localStorage.getItem("username");
-        const room = localStorage.getItem("room");
-        const imageUrl = localStorage.getItem("imageUrl");
-
-        let typingTimeout;
-
-        socket.emit("joinRoom", { username, room });
-
-        header.innerHTML = `<span class="user-status "></span>Welcome ${username}`;
-
-        button.addEventListener("click", () => {
-          const message = input.value;
-          if (message.trim() !== "") {
-            const date = new Date().toLocaleTimeString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false, // Set to true for 12-hour format (e.g., AM/PM)
-            });
-            socket.emit("chatMessage", { message, room, username });
-
-            appendMessage(message, username, imageUrl, date, "self");
-            
-            input.value = "";
-            socket.emit("stopTyping", { username, room }); // Stop typing when the message is sent
-          }
-        });
-
-         // Detect typing and emit events
-        input.addEventListener("input", () => {
-    if (input.value.trim() !== "") {
-      socket.emit("typing", { username, room });
-
-      // Clear the previous timeout
-      clearTimeout(typingTimeout);
-
-      // Set a timeout to emit stopTyping after 1 second of inactivity
-      typingTimeout = setTimeout(() => {
-        socket.emit("stopTyping", { username, room });
-      }, 1000);
-    } else {
-      socket.emit("stopTyping", { username, room });
-    }
-  });
-
-  input.addEventListener("blur", () => {
-    socket.emit("stopTyping", { username, room }); // Stop typing when input loses focus
-  });
-
-  // Display typing indicator
-  socket.on("userTyping", ({ username }) => {
-    const typingIndicator = document.querySelector(".typing-indicator");
-    if (!typingIndicator) {
-      const indicator = document.createElement("div");
-      indicator.classList.add("typing-indicator");
-      indicator.textContent = `${username} is typing...`;
-      header.appendChild(indicator);
-      messages.scrollTop = messages.scrollHeight; // Auto-scroll to show the indicator
-    }
-  });
-
-  // Remove typing indicator
-  socket.on("userStoppedTyping", ({ username }) => {
-    const typingIndicator = document.querySelector(".typing-indicator");
-    if (typingIndicator) {
-      typingIndicator.remove();
-    }
-  });
-
-        // Utility function to append messages to the chat display
-        function appendMessage(
-          message,
-          username,
-          imageUrl,
-          time,
-          self = "non"
-        ) {
-          const div = document.createElement("div");
-          div.classList.add("message", self);
-          div.innerHTML = `
-            <div class="avatar "><img src="../uploads/${imageUrl}"/></div>
-            <div class="text">
-                <strong>${username}</strong>
-                <p>${message}</p>
-                <span class="time">${time}</span>
-            </div>`;
-          messages.appendChild(div);
-          messages.scrollTop = messages.scrollHeight; // Auto-scroll to the latest message
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Entry</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
         }
+        .entry-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .entry-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .entry-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .entry-container label {
+            margin-bottom: 5px;
+        }
+        .entry-container input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .entry-container button {
+            padding: 10px;
+            background-color: #008000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .entry-container button:hover {
+            background-color: #006400;
+        }
+        .entry-container .toggle-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .entry-container .toggle-buttons button {
+            flex: 1;
+            margin-right: 5px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .entry-container .toggle-buttons button:last-child {
+            margin-right: 0;
+        }
+        .entry-container .toggle-buttons button.active {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
 
-        socket.on("userUpdate", ({ count, users }) => {
-          console.log(count);
-          usercount.textContent = `connected users ${count}`;
-          userList.innerHTML = "";
-          users.forEach((name) => {
-            const user = document.createElement("li");
-            user.classList.add("online");
-            user.innerHTML = `<span class="user-status "></span> ${name.username}`;
-            userList.appendChild(user);
-          });
-        });
+<div class="entry-container">
+    <h2>Join Chat Room</h2>
+    <div class="toggle-buttons">
+        <button id="new-user-btn" class="active" onclick="toggleForm('new')">New User</button>
+        <button id="existing-user-btn" onclick="toggleForm('existing')">Existing User</button>
+    </div>
+    <form id="entry-form">
+        <div id="new-user-fields">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
 
-        socket.on("message", ({ name, message, time, imageUrl }) => {
-          appendMessage(message, name, imageUrl, time);
-          
-        });
+            <label for="image">Profile Image URL:</label>
+            <input type="file" id="image" name="image" required>
+        </div>
 
-        socket.on("load_messages", ({ name, message, time, imageUrl }) => {
-          
-          if (username != name) {
-            appendMessage(message, name, imageUrl, time);
-          } else {
-            appendMessage(message, name, imageUrl, time, "self");
-          }
-          
-        });
-      });
-    </script>
-  </body>
+        <div id="existing-user-fields" style="display: none;">
+            <label for="existing-username">Username:</label>
+            <input type="text" id="existing-username" name="existing-username">
+        </div>
+
+        <label for="room">Room Number:</label>
+        <input type="text" id="room" name="room" required>
+
+        <button type="submit">Enter Room</button>
+    </form>
+</div>
+
+<script src="userinput.js"></script>
+
+
+</body>
 </html>
