@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Entry</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .entry-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .entry-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .entry-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .entry-container label {
+            margin-bottom: 5px;
+        }
+        .entry-container input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .entry-container button {
+            padding: 10px;
+            background-color: #008000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .entry-container button:hover {
+            background-color: #006400;
+        }
+        .entry-container .toggle-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .entry-container .toggle-buttons button {
+            flex: 1;
+            margin-right: 5px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .entry-container .toggle-buttons button:last-child {
+            margin-right: 0;
+        }
+        .entry-container .toggle-buttons button.active {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="entry-container">
+    <h2>Join Chat Room</h2>
+    <div class="toggle-buttons">
+        <button id="new-user-btn" class="active" onclick="toggleForm('new')">New User</button>
+        <button id="existing-user-btn" onclick="toggleForm('existing')">Existing User</button>
+    </div>
+    <form id="entry-form">
+        <div id="new-user-fields">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="image">Profile Image URL:</label>
+            <input type="file" id="image" name="image" required>
+        </div>
+
+        <div id="existing-user-fields" style="display: none;">
+            <label for="existing-username">Username:</label>
+            <input type="text" id="existing-username" name="existing-username">
+        </div>
+
+        <label for="room">Room Number:</label>
+        <input type="text" id="room" name="room" required>
+
+        <button type="submit">Enter Room</button>
+    </form>
+</div>
+
+<script src="userinput.js"></script>
+
+
+</body>
+</html>
